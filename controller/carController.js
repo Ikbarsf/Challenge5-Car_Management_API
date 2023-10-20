@@ -38,6 +38,7 @@ const createCar = async (req, res, next) => {
   const { name, price, category, description } = req.body;
   const file = req.file;
 
+  console.log("check", file);
   try {
     //dapatkan extension filenya
     const split = file.originalname.split(`.`);

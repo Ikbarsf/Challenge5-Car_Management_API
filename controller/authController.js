@@ -28,10 +28,74 @@ const register = async (req, res, next) => {
     const saltRounds = 10;
     const hashedPassword = bcrypt.hashSync(password, saltRounds);
 
+    //jika role super admin maka akan otomatis menambahkan role admin
+    let newUser;
+    if (req.user.role == "Super Admin") {
+      newUser = await User.create({
+        name,
+        address,
+        age,
+        role: "Admin",
+      });
+    } else {
+      newUser = await User.create({
+        name,
+        address,
+        age,
+      });
+    }
+
+    const test = await Auth.create({
+      email,
+      password: hashedPassword,
+      userId: newUser.id,
+    });
+
+    console.log(test);
+
+    res.status(201).json({
+      status: "Success",
+      data: {
+        ...newUser,
+        email,
+        password: hashedPassword,
+      },
+    });
+  } catch (err) {
+    next(new ApiError(err.message, 500));
+  }
+};
+
+const addAdmin = async (req, res, next) => {
+  try {
+    const { name, email, password, age, address } = req.body;
+
+    //validasi untuk check apakah email sudah ada
+    const user = await Auth.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (user) {
+      next(new ApiError("User email alredy taken", 400));
+    }
+
+    //minimum password lenght
+    const passwordLength = password <= 8;
+    if (passwordLength) {
+      next(new ApiError("Minimum password must be 8 character", 400));
+    }
+
+    // hashing password
+    const saltRounds = 10;
+    const hashedPassword = bcrypt.hashSync(password, saltRounds);
+
     const newUser = await User.create({
       name,
       address,
       age,
+      role: "Admin",
     });
     const test = await Auth.create({
       email,
@@ -109,4 +173,5 @@ module.exports = {
   register,
   login,
   checktoken,
+  addAdmin,
 };
