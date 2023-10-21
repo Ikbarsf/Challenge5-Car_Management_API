@@ -24,6 +24,15 @@ module.exports = {
       imageUrl: {
         type: Sequelize.TEXT
       },
+      createBy: {
+        type: Sequelize.INTEGER
+      },
+      updateBy: {
+        type: Sequelize.INTEGER
+      },
+      deleteBy: {
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

@@ -5,7 +5,6 @@ const ApiError = require("../utils/apiError");
 const getAllCars = async (req, res, next) => {
   try {
     const Cars = await Car.findAll({
-      where: condition,
       paranoid: false,
       include: ["creator", "updater", "deleter"],
     });

@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       price: DataTypes.INTEGER,
-      category: DataTypes.ENUM(["small", "medium", "large"]),
+      category: DataTypes.ENUM("small", "medium", "large"),
       description: DataTypes.STRING,
       imageUrl: {
         type: DataTypes.TEXT,
@@ -49,7 +49,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      paranoid: true,
       modelName: "Car",
     }
   );
