@@ -17,11 +17,11 @@
   ],
   "servers": [
     {
-      "url": "http://localhost:9000/api/v1"
+      "url": "http://localhost:3000/api/v1"
     }
   ],
   "paths": {
-    "/auth/member/login": {
+    "/auth/login": {
       "post": {
         "tags": ["Users"],
         "summary": "Return hasil hit api login utk member",
@@ -35,11 +35,11 @@
                 "properties": {
                   "email": {
                     "type": "string",
-                    "example": "imam@mail.com"
+                    "example": "heri@mail.com"
                   },
                   "password": {
                     "type": "string",
-                    "example": "imamganteng"
+                    "example": "heri123"
                   }
                 }
               }
@@ -48,7 +48,7 @@
         },
         "responses": {
           "200": {
-            "description": "Sukses Member login",
+            "description": "Sukses Login",
             "content": {
               "application/json": {
                 "schema": {
@@ -73,7 +73,7 @@
             }
           },
           "400": {
-            "description": "Gagal Member login",
+            "description": "Gagal Login",
             "content": {
               "application/json": {
                 "schema": {
@@ -88,7 +88,7 @@
                       "properties": {
                         "message": {
                           "type": "string",
-                          "example": "wrong password atau user gak ada"
+                          "example": "User tidak terdaftar"
                         }
                       }
                     }
@@ -100,7 +100,7 @@
         }
       }
     },
-    "/auth/member/register": {
+    "/auth/register": {
       "post": {
         "tags": ["Users"],
         "summary": "Return hasil hit api register",
@@ -114,27 +114,23 @@
                 "properties": {
                   "name": {
                     "type": "string",
-                    "example": "imam"
+                    "example": "Heri"
                   },
                   "password": {
                     "type": "string",
-                    "example": "imamganteng"
+                    "example": "heri123"
                   },
                   "email": {
                     "type": "string",
-                    "example": "imam@mail.com"
-                  },
-                  "confirmPassword": {
-                    "type": "string",
-                    "example": "imamganteng"
+                    "example": "heri@mail.com"
                   },
                   "age": {
                     "type": "integer",
-                    "example": 1
+                    "example": 20
                   },
                   "address": {
                     "type": "string",
-                    "example": "bandung"
+                    "example": "Jember"
                   }
                 }
               }
@@ -168,7 +164,7 @@
             }
           },
           "400": {
-            "description": "Gagal Member login",
+            "description": "Gagal Registrasi",
             "content": {
               "application/json": {
                 "schema": {
@@ -195,7 +191,7 @@
         }
       }
     },
-    "/cars": {
+    "/car": {
       "post": {
         "tags": ["Cars"],
         "security": [
@@ -215,21 +211,17 @@
                   "name": {
                     "type": "string"
                   },
-                  "available": {
-                    "type": "boolean",
-                    "example": true
+                  "price": {
+                    "type": "integer",
+                    "example": 1
                   },
                   "category": {
                     "type": "string",
                     "example": "small"
                   },
-                  "price": {
-                    "type": "integer",
-                    "example": 1
-                  },
-                  "type": {
+                  "description": {
                     "type": "string",
-                    "example": "small"
+                    "example": "lorem ipsum"
                   },
                   "image": {
                     "type": "string",
@@ -293,8 +285,73 @@
           }
         }
       }
+    },
+    "/car/get": {
+      "get": {
+        "tags": ["Cars"],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Return hasil hit api cars",
+        "description": "ini API utk get data car"
+      },
+      "responses": {
+        "200": {
+          "description": "Sukses get data car",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "example": "Success"
+                  },
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "token": {
+                        "type": "string",
+                        "example": "GWHUHGUAWHGUAHGIAWBGVIAHWBVIAW"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Gagal mengambil data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "example": "Failed"
+                  },
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "wrong password atau user gak ada"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
+
   "components": {
     "securitySchemes": {
       "bearerToken": {

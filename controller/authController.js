@@ -29,14 +29,15 @@ const register = async (req, res, next) => {
     const hashedPassword = bcrypt.hashSync(password, saltRounds);
 
     //jika role super admin maka akan otomatis menambahkan role admin
-    let newUser;
-    if (req.user.role == "Super Admin") {
-      newUser = await User.create({
-        name,
-        address,
-        age,
-        role: "Admin",
-      });
+    if (req.user) {
+      if (req.user.role == "Super Admin") {
+        newUser = await User.create({
+          name,
+          address,
+          age,
+          role: "Admin",
+        });
+      }
     } else {
       newUser = await User.create({
         name,
