@@ -4,7 +4,11 @@ const ApiError = require("../utils/apiError");
 
 const getAllCars = async (req, res, next) => {
   try {
-    const Cars = await Car.findAll();
+    const Cars = await Car.findAll({
+      where: condition,
+      paranoid: false,
+      include: ["creator", "updater", "deleter"],
+    });
     res.status(200).json({
       status: "Success",
       data: {
@@ -22,6 +26,7 @@ const getCarById = async (req, res, next) => {
       where: {
         id: req.params.id,
       },
+      include: ["User"],
     });
     res.status(200).json({
       status: "Success",
@@ -38,7 +43,6 @@ const createCar = async (req, res, next) => {
   const { name, price, category, description } = req.body;
   const file = req.file;
 
-  console.log("check", file);
   try {
     //dapatkan extension filenya
     const split = file.originalname.split(`.`);
@@ -54,6 +58,8 @@ const createCar = async (req, res, next) => {
       price,
       category,
       description,
+      createBy: req.user.id,
+      updateBy: req.user.id,
       imageUrl: img.url,
     });
 
@@ -88,6 +94,7 @@ const updateCar = async (req, res, next) => {
         price,
         category,
         description,
+        updateBy: req.user.id,
         imageUrl: img.url,
       },
       {
@@ -117,6 +124,17 @@ const deleteCar = async (req, res, next) => {
     if (!Cars) {
       next(new ApiError("Car id tersebut gak ada", 404));
     }
+
+    await Car.update(
+      {
+        deleteBy: req.user.id,
+      },
+      {
+        where: {
+          id: req.params.id,
+        },
+      }
+    );
 
     await Car.destroy({
       where: {
